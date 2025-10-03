@@ -3,7 +3,7 @@
 int check(int k, int m) {
     int total = 2 * k; // 总人数
     int pos = 0;       // 当前数数的人
-    int killed[k];     // 记录前k个被杀的人的编号
+    int *killed = (int *)malloc(k * sizeof(int)); // 记录前k个被杀的人的编号
     int killCount = 0; // 已杀人数
 
     while (killCount < k) {
@@ -19,9 +19,11 @@ int check(int k, int m) {
      // 检查前k个被杀的人的编号是否大于等于K
     for (int i = 0; i < k; i++) {
         if (killed[i] < k) {
+            free(killed);
             return 0; 
         }
     }
+    free(killed);
     return 1; 
 }
 
