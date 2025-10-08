@@ -12,7 +12,6 @@ public:
         publisher_ = this->create_publisher<sensor_msgs::msg::Image>("image_topic", 10);
         
         // 在构造函数中一次性读取图像
-        // 请确保图像路径正确
         image_ = cv::imread("/home/zmy/ros2_ws/image.jpg");
         if (image_.empty()) {
             RCLCPP_ERROR(this->get_logger(), "Failed to load image!");
