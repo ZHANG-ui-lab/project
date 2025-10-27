@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<robot name="six_axis_arm">
+  <!-- 连杆1：基座连杆(base_link)- 机械臂底部固定基础 -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> <!-- 基座原点在自身中心 -->
+      <geometry>
+        <box size="0.3 0.3 0.1"/> <!-- 基座尺寸：长×宽×高 -->
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- 连杆2:定义关节1连杆(joint1)，机械臂的第一个关节结构 -->
+  <link name="joint1">
+    <visual>
+      <!-- 位姿：无平移，绕z轴-90度（-1.5708rad） -->
+      <origin xyz="0.0 0 0" rpy="0 0 -1.5708"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.06"/> <!-- 短圆柱体，比基座稍细 -->
+      </geometry>
+      <material name="black"> <!-- 与基座同色，视觉上更连贯 -->
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+  
+  <!-- 连杆3：定义关节2连杆（joint2） -->
+  <link name="joint2">
+    <visual>
+      <origin xyz="0 0 0.08" rpy="0 0 0"/> <!-- 中心在自身长度中点（长0.3m，Z向0.15m） -->
+      <!-- 用圆柱体模拟连杆 -->
+      <geometry>
+        <cylinder length="0.16" radius="0.04"/> <!-- 长度0.16m，半径0.04m -->
+      </geometry>
+      <!-- 颜色区分：用红色与基座区分 -->
+      <material name="red">
+        <color rgba="0.8 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- 倒圆柱体连杆（与joint2固定连接） -->
+  <link name="inverted_cylinder">
+    <visual>
+      <geometry>
+        <cylinder length="0.2" radius="0.04"/> <!-- 长度0.2m，半径0.04m -->
+      </geometry>
+      <origin xyz="0.06 0 0" rpy="0 1.5708 0"/> 
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/> 
+      </material>
+    </visual>
+  </link>
+
+    <!-- 连杆4：关节3连杆（joint3）- 对应机械臂第3个关节的刚性结构 -->
+  <link name="joint3">
+    <visual>
+      <origin xyz="0.12 0 0.11" rpy="0 0 0"/> 
+      <!-- 圆柱体 -->
+      <geometry>
+        <cylinder length="0.22" radius="0.04"/> 
+      </geometry>
+      <material name="red">
+        <color rgba="0.8 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+  
+    <!-- joint3的倒圆柱体连杆 -->
+  <link name="inverted_cylinder_joint3">
+    <visual>
+      <geometry>
+        <cylinder length="0.2" radius="0.04"/> <!-- 尺寸可与joint2的倒圆柱保持一致 -->
+      </geometry>
+      <origin xyz="0.06 0 0" rpy="0 1.5708 0"/> <!-- y轴正向偏移，实现“倒着”效果 -->
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/> <!-- 黑色区分 -->
+      </material>
+    </visual>
+  </link>
+  
+    <!-- 连杆5：关节4连杆（joint4）- 对应机械臂第4个关节的刚性结构 -->
+  <link name="joint4">
+    <visual>
+      <origin xyz="0 0 0.11" rpy="0 0 0"/> 
+      <!-- 用圆柱体模拟小臂 -->
+      <geometry>
+        <cylinder length="0.22" radius="0.035"/> <!-- 半径0.035m，与大臂统一 -->
+      </geometry>
+      <material name="red">
+        <color rgba="0.8 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- joint4的倒圆柱体连杆 -->
+  <link name="inverted_cylinder_joint4">
+    <visual>
+      <geometry>
+        <cylinder length="0.19" radius="0.035"/> <!-- 尺寸与joint4连杆的半径匹配 -->
+      </geometry>
+      <origin xyz="0.06 0 0" rpy="0 1.5708 0"/> <!-- y轴正向偏移，实现“倒着”效果 -->
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/> 
+      </material>
+    </visual>
+  </link>
+
+    <!-- 连杆6：关节5连杆（joint5）-（第四与第五运动关节之间） -->
+    <link name="joint5">
+        <visual>
+            <geometry>
+                <cylinder length="0.10" radius="0.035"/> <!-- 与joint4等长等粗 -->
+            </geometry>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/> <!-- 中心在自身长度中点（长0.25m，Y向0.125m） -->
+            <material name="red">
+                <color rgba="0.8 0 0 1"/> 
+            </material>
+        </visual>
+    </link>
+
+    <!-- 连杆7：关节6连杆（joint6）- （第五与第六运动关节之间） -->
+    <link name="joint6">
+        <visual>
+            <geometry>
+                <cylinder length="0.05" radius="0.035"/> <!-- 更细短，接近末端 -->
+            </geometry>
+            <origin xyz="0 0 0.025" rpy="0 0 0"/> <!-- 中心在自身长度中点（长0.2m，Y向0.1m） -->
+            <material name="grey">
+                <color rgba="0.6 0.6 0.6 1"/> 
+            </material>
+        </visual>
+    </link>
+
+   <!-- 连杆8：固定的倒圆柱体（与joint6刚性连接） -->
+    <link name="fixed_cylinder">
+        <visual>
+            <geometry>
+                <cylinder length="0.15" radius="0.035"/> <!-- 倒圆柱体：长度0.08m -->
+            </geometry>
+            <!-- 原点沿Z轴负方向偏移（倒着延伸），绕X轴旋转180度 -->
+            <origin xyz="0 0.025 0.025" rpy="1.5708 0 0"/> 
+            <material name="black">
+                <color rgba="0.1 0.1 0.1 1"/>
+            </material>
+        </visual>
+    </link>
+    
+    <!-- 连杆9：可360度旋转的短圆柱体 -->
+    <link name="rotating_cylinder">
+        <visual>
+            <geometry>
+                <cylinder length="0.05" radius="0.035"/> 
+            </geometry>
+            <!-- 原点在自身中点（Z轴负向偏移一半长度），确保旋转无偏移 -->
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/> 
+            <material name="grey">
+                <color rgba="0.6 0.6 0.6 1"/> 
+            </material>
+        </visual>
+    </link>
+
+    <!-- 关节1：基座-关节1关节（base_link_to_joint1）- 固定关节（无运动） -->
+    <joint name="base_link_to_joint1" type="fixed"> 
+        <axis xyz="0 0 0"/> <!-- 固定关节无旋转轴 -->
+        <parent link="base_link"/> <!-- 父连杆：基座 -->
+        <child link="joint1"/>  <!-- 子连杆：关节1连杆 -->
+        <origin xyz="0 0 0.1" rpy="0 0 0"/> <!-- 基座顶部（Z向0.1m）连接过渡连杆 -->
+    </joint>
+
+    <!-- 关节2：关节1-关节2关节（joint2_to_joint1）- 第一运动关节 -->
+    <joint name="joint2_to_joint1" type="revolute">
+        <axis xyz="0 0 1"/> <!-- 旋转轴：z轴 -->
+        <parent link="joint1"/> <!-- 父连杆：关节1连杆 -->
+        <child link="joint2"/>  <!-- 子连杆：关节2连杆 -->
+        <origin xyz="0 0 0.05" rpy="0 0 0"/> <!-- 过渡连杆顶部（Z向0.1m）连接关节2连杆 -->
+        <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/> 
+    </joint>
+
+  <!-- 固定关节（连接joint2与倒圆柱体，无运动） -->
+  <joint name="joint2_to_inverted" type="fixed">
+    <parent link="joint2"/>   <!-- 父连杆：joint2 -->
+    <child link="inverted_cylinder"/> <!-- 子连杆：倒圆柱体 -->
+    <origin xyz="0 0 0.16" rpy="0 0 0"/> <!-- 连接点：joint2连杆的顶端（Z向0.16m，与joint2的长度中点逻辑一致） -->
+    <axis xyz="0 0 0"/> <!-- 固定关节无旋转轴 -->
+  </joint>
+
+    <!-- 关节3：关节2-关节3关节（joint3_to_joint2）- 第二运动关节 -->
+    <joint name="joint3_to_joint2" type="revolute">
+        <axis xyz="1 0 0"/> <!-- 旋转轴：x轴 -->
+        <parent link="joint2"/> <!-- 父连杆：关节2连杆 -->
+        <child link="joint3"/>  <!-- 子连杆：关节3连杆 -->
+        <origin xyz="0 0 0.16" rpy="0 0 0"/> <!-- 关节2连杆顶端（Z向0.3m）连接关节3连杆 -->
+        <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/> 
+    </joint>
+
+  <!-- 固定关节（连接joint3与倒圆柱体） -->
+  <joint name="joint3_to_inverted" type="fixed">
+    <parent link="joint3"/>   <!-- 父连杆：joint3 -->
+    <child link="inverted_cylinder_joint3"/> <!-- 子连杆：倒圆柱体 -->
+    <origin xyz="0 0 0.22" rpy="0 0 0"/> <!-- 连接点：joint3连杆的顶端（Z向0.22m，与joint3的长度逻辑一致） -->
+    <axis xyz="0 0 0"/> <!-- 固定关节无旋转轴 -->
+  </joint>
+
+    <!-- 关节4：关节3-关节4关节（joint4_to_joint3）- 第三运动关节 -->
+    <joint name="joint4_to_joint3" type="revolute">
+        <axis xyz="1 0 0"/> <!-- 旋转轴：x轴 -->
+        <parent link="joint3"/> <!-- 父连杆：关节3连杆 -->
+        <child link="joint4"/>  <!-- 子连杆：关节4连杆 -->
+        <origin xyz="0 0 0.22" rpy="0 0 0"/> <!-- 关节3连杆末端（z向0.22m）连接关节4连杆 -->
+        <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/> 
+    </joint>
+    
+      <!-- 固定关节（连接joint4与倒圆柱体） -->
+  <joint name="joint4_to_inverted" type="fixed">
+    <parent link="joint4"/>   <!-- 父连杆：joint4 -->
+    <child link="inverted_cylinder_joint4"/> <!-- 子连杆：倒圆柱体 -->
+    <origin xyz="0 0 0.22" rpy="0 0 0"/> <!-- 连接点：joint4连杆的顶端（Z向0.22m，与joint4的长度逻辑一致） -->
+    <axis xyz="0 0 0"/> <!-- 固定关节无旋转轴 -->
+  </joint>
+
+    <!-- 关节5：关节4-关节5关节（joint5_to_joint4）- 第四运动关节 -->
+    <joint name="joint5_to_joint4" type="revolute">
+        <axis xyz="1 0 0"/> <!-- 旋转轴：x轴 -->
+        <parent link="joint4"/> <!-- 父连杆：关节4连杆 -->
+        <child link="joint5"/>  <!-- 子连杆：关节5连杆 -->
+         <origin xyz="0.12 0 0.22" rpy="0 0 0"/> 
+        <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/> <!-- 新增运动约束 -->
+    </joint>
+
+    <!-- 关节6：关节5-关节6关节（joint6_to_joint5）- 第五运动关节 -->
+    <joint name="joint6_to_joint5" type="revolute">
+        <axis xyz="0 0 1"/> <!-- 旋转轴：z轴 -->
+        <parent link="joint5"/> <!-- 父连杆：关节5连杆 -->
+        <child link="joint6"/>  <!-- 子连杆：关节6连杆 -->
+        <origin xyz="0 0 0.1" rpy="0 0 0"/> 
+        <limit lower="-6.28" upper="6.28" effort="100" velocity="1.0"/> <!-- 新增运动约束 -->
+    </joint>
+    
+        <!-- 关节7：固定关节（连接joint6和固定倒圆柱体） -->
+    <joint name="joint6_to_fixed_cylinder" type="fixed">
+        <parent link="joint6"/> <!-- 父连杆：关节6 -->
+        <child link="fixed_cylinder"/> <!-- 子连杆：固定倒圆柱体 -->
+        <origin xyz="0 0 0.05" rpy="0 0 0"/> <!-- 连接joint6的末端（Z向0.05m） -->
+    </joint>
+    
+     <!-- 关节8：旋转关节（连接固定圆柱体和可旋转短圆柱体） -->
+    <joint name="fixed_to_rotating" type="revolute">
+        <axis xyz="0 1 0"/> <!-- 旋转轴：y轴（水平方向360度旋转） -->
+        <parent link="fixed_cylinder"/> <!-- 父连杆：固定倒圆柱体 -->
+        <child link="rotating_cylinder"/> <!-- 子连杆：可旋转短圆柱体 -->
+        <origin xyz="0 0.125 0.025" rpy="0 0 0"/> 
+        <limit lower="-6.28" upper="6.28" effort="100" velocity="1.0"/> <!-- ±2π（360度）无死角旋转 -->
+    </joint>
+    
+</robot>
